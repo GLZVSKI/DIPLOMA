@@ -1,44 +1,49 @@
 <?php
 
-use app\models\Template;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $data yii\data\ActiveDataProvider */
 
-$this->title = 'Templates';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Мои шаблоны';
 ?>
 <div class="template-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 class="mx-3"><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Template', ['create'], ['class' => 'btn btn-success']) ?>
+    <p class="mx-3">
+        <?= Html::a('Добавить новый', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <div class="album">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-            'id',
-            'user_id',
-            'path',
-            'date',
-            'deleted',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Template $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-        ],
-    ]); ?>
+                <?php foreach ($data as $item) { ?>
+                    <div class="col my-2">
+                        <div class="card shadow-sm">
+                            <img src="<?= Yii::getAlias('@web/web')?>/uploads/templates/<?= $item['path'] ?>"
+                                 class="bd-placeholder-img card-img-top"/>
+
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="<?= Url::toRoute(['/template/view', 'id' => $item['id'] ])?> " class="btn btn-sm btn-outline-primary">Использовать</a>
+                                        <a href="<?= Url::toRoute(['/template/delete', 'id' => $item['id'] ])?> " class="btn btn-sm btn-outline-danger">Удалить</a>
+                                    </div>
+                                    <small class="text-muted"><?= Yii::$app->formatter->asDate($item['date'], 'long') ?></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+            </div>
+        </div>
+    </div>
 
 
 </div>

@@ -1,14 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Template */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Templates', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Создание документа';
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="template-view">
@@ -16,25 +13,28 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Удалить этот шаблон?',
                 'method' => 'post',
             ],
         ]) ?>
+        <button class="btn btn-primary" id="btn_add_text_field">Добавить текстовое поле</button>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'user_id',
-            'path',
-            'date',
-            'deleted',
-        ],
-    ]) ?>
+
+    <div class="co p-0 d-flex">
+        <div id="block_image">
+            <canvas id="canvas">
+                <img id="image" src="<?= Yii::getAlias('@web/web/uploads/templates/') . $model->path ?>" hidden alt="image">
+            </canvas>
+        </div>
+
+        <div class="col p-0">
+        </div>
+    </div>
 
 </div>
+
+<script src="<?= Yii::getAlias('@web/web') ?>/js/create_template.js"></script>

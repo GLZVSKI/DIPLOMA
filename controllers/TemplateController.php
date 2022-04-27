@@ -4,8 +4,6 @@ namespace app\controllers;
 
 use app\models\Template;
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
@@ -13,11 +11,8 @@ use yii\web\UploadedFile;
 /**
  * TemplateController implements the CRUD actions for Template model.
  */
-class TemplateController extends Controller
+class TemplateController extends BaseController
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -26,21 +21,7 @@ class TemplateController extends Controller
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-                'access' => [
-                    'class' => \yii\filters\AccessControl::class,
-                    'only' => ['create', 'update', 'index', 'delete'],
-                    'rules' => [
-                        [
-                            'allow' => false,
-                            'verbs' => ['POST']
-                        ],
-                        [
-                            'allow' => true,
-                            'roles' => ['@'],
-                        ],
+                        'delete' => ['get'], //delete this string to may GET
                     ],
                 ],
             ]
@@ -54,22 +35,18 @@ class TemplateController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Template::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $data = Template::find()
+            ->select([
+                'id',
+                'path',
+                'date',
+            ])
+            ->where(['user_id' => Yii::$app->user->id])
+            ->asArray()
+            ->all();
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'data' => $data,
         ]);
     }
 
@@ -146,7 +123,9 @@ class TemplateController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if ($this->request->isGet) {
+            $this->findModel($id)->delete();
+        }
 
         return $this->redirect(['index']);
     }
@@ -155,15 +134,20 @@ class TemplateController extends Controller
      * Finds the Template model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Template the loaded model
+     * @return Template|array|\yii\db\ActiveRecord
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Template::findOne(['id' => $id])) !== null) {
-            return $model;
+        $model = Template::find()
+            ->where(['id' => $id, 'user_id' => Yii::$app->user->id])
+            ->limit(1)
+            ->one();
+
+        if (!$model) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return $model;
     }
 }

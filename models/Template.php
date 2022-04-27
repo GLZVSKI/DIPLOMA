@@ -79,7 +79,7 @@ class Template extends ActiveRecord
         $this->user_id = \Yii::$app->user->identity->id;
 
         if ($this->validate()) {
-            $dir = 'web/uploads/templates';
+            $dir = 'web/uploads/templates/';
             $file = $dir . $name;
 
             $this->file->saveAs($file);
