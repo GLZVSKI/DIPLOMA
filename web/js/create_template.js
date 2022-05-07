@@ -1,5 +1,6 @@
 let block_image = document.getElementById('block_image');
 let btn_add_text_field = document.getElementById('btn_add_text_field');
+let btn_save_image = document.getElementById('btn_save_image');
 
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
@@ -30,25 +31,10 @@ block_image.style.height = image.naturalHeight + 'px';
 
 draw();
 
-function text() {
-    let text = prompt('Введите тект');
-    let span = document.createElement('span');
-
-    span.style.position = 'absolute';
-    span.style.fontSize = '24pt';
-
-    span.textContent = text;
-    document.body.append(span);
-
-    let params = {
-        width: span.offsetWidth,
-        height: span.offsetHeight,
-    }
-
-    span.remove();
-
-    return params;
+btn_save_image.onclick = () => {
+    saveCanvasAsImageFile();
 }
+
 
 btn_add_text_field.onclick = () => {
     let params = text();
@@ -62,11 +48,34 @@ btn_add_text_field.onclick = () => {
         width: params.width + (params.width * 0.2),
         height: params.height,
         isDragging: false,
-        text: text,
+        text: params.text,
     });
 
     draw();
 }
+
+
+function text() {
+    let text = prompt('Введите тект');
+    let span = document.createElement('span');
+
+    span.style.position = 'absolute';
+    span.style.fontSize = '24pt';
+
+    span.textContent = text;
+    document.body.append(span);
+
+    let params = {
+        width: span.offsetWidth,
+        height: span.offsetHeight,
+        text: text,
+    }
+
+    span.remove();
+
+    return params;
+}
+
 
 function myUp(e) {
     dragok = false;
@@ -75,6 +84,7 @@ function myUp(e) {
         fields[i].isDragging = false;
     }
 }
+
 
 function myMove(e) {
     if (dragok) {
@@ -97,6 +107,7 @@ function myMove(e) {
         startY = my;
     }
 }
+
 
 function myDown(e) {
     let mx = parseInt(e.offsetX);
@@ -137,13 +148,14 @@ function myDown(e) {
 
 
 function rect(field) {
-    ctx.fillStyle = '#22222226';
+    ctx.fillStyle = 'rgba(0, 123, 255, 0)';
     ctx.fillRect(field.x, field.y, field.width, field.height);
 
     ctx.fillStyle = "#222";
     ctx.font = "24pt Verdana";
     ctx.fillText(field.text, field.x, (field.y + field.height / 2));
 }
+
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -160,3 +172,25 @@ function draw() {
     }
 }
 
+
+function getImage(canvas){
+    let imageData = canvas.toDataURL();
+    let image = new Image();
+    image.src = imageData;
+
+    return image;
+}
+
+
+function saveImage(image) {
+    let link = document.createElement("a");
+    link.setAttribute("href", image.src);
+    link.setAttribute("download", "image");
+    link.click();
+}
+
+
+function saveCanvasAsImageFile(){
+    let image = getImage(document.getElementById("canvas"));
+    saveImage(image);
+}

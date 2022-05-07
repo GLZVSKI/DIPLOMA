@@ -21,6 +21,7 @@ $this->title = 'Создание документа';
             ],
         ]) ?>
         <button class="btn btn-primary" id="btn_add_text_field">Добавить текстовое поле</button>
+        <button class="btn btn-success" id="btn_save_image">Сохранить изображение</button>
     </p>
 
 
