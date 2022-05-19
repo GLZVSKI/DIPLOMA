@@ -2,10 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\ExelFile;
 use app\models\Template;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
+use yii\db\Exception;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -149,5 +153,38 @@ class TemplateController extends BaseController
         }
 
         return $model;
+    }
+
+
+    public function actionLoad()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!$this->request->isPost) {
+            return false;
+        }
+
+        try {
+            $model = new ExelFile();
+            $model->file = UploadedFile::getInstanceByName('file');
+
+            if (!$model->upload()) {
+                throw new Exception(array_values($model->getFirstErrors())[0], 400);
+            }
+
+            $spreadsheet = IOFactory::load($model->path);
+            $res = $spreadsheet->getActiveSheet()->toArray();
+
+        }catch (\Throwable $exception) {
+            return [
+                'result' => false,
+                'message' => $exception->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true,
+            'data' => $res ?? []
+        ];
     }
 }
