@@ -12,16 +12,30 @@ $this->title = 'Создание документа';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Удалить этот шаблон?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <button class="btn btn-primary" id="btn_add_text_field">Вставить текст</button>
-    </p>
+<!--    <div class="form-inline py-2">-->
+<!--        <div class="form-group ml-1">-->
+<!--            <select id="selectFont" class="form-control">-->
+<!--                <option selected value="Times New Roman">Times New Roman</option>-->
+<!--                <option value="Verdana">Verdana</option>-->
+<!--                <option value="Arial">Arial</option>-->
+<!--                <option value="Calibri">Calibri</option>-->
+<!--                <option value="Segoe Print">Segoe Print</option>-->
+<!--                <option value="Tahoma">Tahoma</option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!---->
+<!--        <div class="form-group ml-1">-->
+<!--            <select id="selectFontType" class="form-control">-->
+<!--                <option selected value="Normal">Normal</option>-->
+<!--                <option value="Italic">Italic</option>-->
+<!--                <option value="Bold">Bold</option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!---->
+<!--        <input type="number" class="form-control ml-1 col-1" id="text_size" value="18" placeholder="Размер шрифта">-->
+<!---->
+<!--        <button class="btn btn-primary ml-1" id="btn_add_text_field">Добавить текст</button>-->
+<!--    </div>-->
 
 
     <div class="co p-0 pb-5 d-flex">
@@ -34,7 +48,34 @@ $this->title = 'Создание документа';
 
         <div class="col p-0">
             <div class="col">
-                <h2>Вставка данных из Exel-файла</h2>
+                <h4>Настройки шрифта</h4>
+                <div class="form-inline col p-0">
+                    <div class="form-group col-7 p-0">
+                        <select id="selectFont" class="form-control col-12">
+                            <option selected value="Times New Roman">Times New Roman</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Calibri">Calibri</option>
+                            <option value="Segoe Print">Segoe Print</option>
+                            <option value="Tahoma">Tahoma</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group px-1">
+                        <select id="selectFontType" class="form-control">
+                            <option selected value="Normal">Normal</option>
+                            <option value="Italic">Italic</option>
+                            <option value="Bold">Bold</option>
+                        </select>
+                    </div>
+
+                    <input type="number" class="form-control col-2" id="text_size" value="18" placeholder="Размер шрифта">
+                </div>
+
+                <button class="btn btn-primary col-12 mt-4" id="btn_add_text_field">Добавить текстовое поле</button>
+                <button class="btn btn-danger col-12 mt-1" id="btn_delete_text_field" hidden>Удалить последнее поле</button>
+
+                <h4 class="mt-4">Вставка данных из Exel-файла</h4>
                 <div class="mb-3">
                     <input class="form-control" type="file" id="field_exel_file">
                     <button type="submit" class="btn btn-primary mt-2" id="btn_exel_file" disabled>Получить данные</button>

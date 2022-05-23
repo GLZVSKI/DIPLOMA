@@ -1,5 +1,6 @@
 let block_image = document.getElementById('block_image');
 let btn_add_text_field = document.getElementById('btn_add_text_field');
+let btn_delete_text_field = document.getElementById('btn_delete_text_field');
 let btn_save_image = document.getElementById('btn_save_image');
 
 let btn_exel_file = document.getElementById('btn_exel_file');
@@ -18,12 +19,6 @@ let image_src = document.getElementById('image').src;
 let fields = [];
 let exelData = [];
 
-// Настройки шрифта
-let font = {
-    size: 24,
-    title: 'Verdana',
-}
-
 let dragok = false;
 let startX;
 let startY;
@@ -37,6 +32,33 @@ let num = 0;
 field_exel_file.onchange = () => {
     btn_exel_file.disabled = false;
 }
+
+
+// Настройки шрифта
+let field_text_size = document.getElementById('text_size');
+let field_text_font = document.getElementById('selectFont');
+let field_text_font_type = document.getElementById('selectFontType');
+
+let font = {
+    size: 18,
+    title: 'Times New Roman',
+    type: 'Normal',
+}
+
+field_text_size.onkeyup = function () { // Выбрать размер шрифта
+    if (this.value > 4) {
+        font.size = Number(this.value);
+    }
+}
+
+field_text_font.onchange = function () { // Выбрать шрифт
+    font.title = this.value;
+}
+
+field_text_font_type.onchange = function () { // Выбрать тип шрифта
+    font.type = this.value;
+}
+
 
 btn_enter_data.onclick = async () => {
     let string = 0;
@@ -100,6 +122,9 @@ function create_list_fields(id) {
                 isDragging: false,
                 text: 'Поле ' + id,
                 id: id,
+                size: font.size,
+                font: font.title,
+                type: font.type,
             });
 
             draw();
@@ -191,9 +216,23 @@ btn_add_text_field.onclick = () => {
         isDragging: false,
         text: params.text,
         color: 'rgba(0, 123, 255, 0)',
+        size: font.size,
+        font: font.title,
+        type: font.type,
+        id: null,
     });
 
     draw();
+    btn_delete_text_field.hidden = false;
+}
+
+btn_delete_text_field.onclick = () => {
+    fields.pop();
+    draw();
+
+    if (fields.length === 0) {
+        btn_delete_text_field.hidden = true;
+    }
 }
 
 function EnterText() {
@@ -294,17 +333,14 @@ function getTextSize(text) {
 function rect(field) {
     ctx.fillStyle = 'rgba(0, 123, 255, 0)';
     ctx.fillRect(field.x, field.y, field.width, field.height);
-    ctx.font = font.size + 'pt ' + font.title;
+    ctx.fillStyle = '#000';
+    ctx.font = field.type + ' ' + field.size + 'pt ' + field.font;
     ctx.fillText(field.text, field.x, (field.y + field.height / 2));
 }
 
 function rectAll() {
-    ctx.fillStyle = 'rgba(0, 123, 255, 0)';
-
     fields.forEach((field) => {
-        ctx.fillRect(field.x, field.y, field.width, field.height);
-        ctx.font = font.size + 'pt ' + font.title;
-        ctx.fillText(field.text, field.x, (field.y + field.height / 2));
+       rect(field);
     });
 }
 
